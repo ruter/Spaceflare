@@ -6,8 +6,23 @@ const ZONE_ID = env.CF_ZONE_ID;
 
 const BASE_URL = "https://api.cloudflare.com/client/v4";
 
-const listRecords = async () => {
-  const END_POINT = `/zones/${ZONE_ID}/dns_records`;
+const listZones = async () => {
+  const END_POINT = "/zones";
+  const API_URL = BASE_URL + END_POINT;
+
+  const res = await fetch(API_URL, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${API_TOKEN}`,
+    }
+  });
+  const data = await res.json();
+  return data;
+}
+
+const listRecords = async (zoneId: string) => {
+  const END_POINT = `/zones/${zoneId}/dns_records`;
   const API_URL = BASE_URL + END_POINT;
 
   const res = await fetch(API_URL, {
@@ -22,7 +37,7 @@ const listRecords = async () => {
   return data;
 }
 
-const updateRecord = async (recordId: string, record: DNSRecord) => {
+const updateRecord = async (zoneId: string, recordId: string, record: DNSRecord) => {
   const END_POINT = `/zones/${ZONE_ID}/dns_records/${recordId}`;
   const API_URL = BASE_URL + END_POINT;
 
@@ -54,4 +69,4 @@ const deleteRecord = async (recordId: string) => {
   return data;
 }
 
-export { listRecords, updateRecord, deleteRecord };
+export { listZones, listRecords, updateRecord, deleteRecord };
